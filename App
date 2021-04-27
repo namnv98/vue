@@ -122,12 +122,14 @@ export default {
       ],
       menus: [],
       sizeColumns: [],
-      splitColumns: [],
     };
   },
   created() {
-    //convert tree to list
+    var splitColumns = [];
     var sizeOfTitle = [];
+    var maxRow = 6;
+
+    //convert tree to list
     for (var l = 0; l < this.listMenu.length; l++) {
       this.menus.push({ value: this.listMenu[l].value, type: "title" });
       var index = 1;
@@ -149,43 +151,42 @@ export default {
       }
     }
 
-    var dt = 6;
     //tách dữ liệu nếu length > đk
     for (let i = 0; i < sizeOfTitle.length; i++) {
       var value = sizeOfTitle[i].index;
-      if (value > dt) {
-        while (value > dt) {
-          this.splitColumns.push(dt);
-          value = value - dt;
+      if (value > maxRow) {
+        while (value > maxRow) {
+          splitColumns.push(maxRow);
+          value = value - maxRow;
         }
-        if (value <= dt) {
-          this.splitColumns.push(value);
+        if (value <= maxRow) {
+          splitColumns.push(value);
         }
       } else {
-        this.splitColumns.push(value);
+        splitColumns.push(value);
       }
     }
 
     //hợp nhất các cột nếu còn đủ chỗ trống
-    for (var i = 0; i < this.splitColumns.length - 1; i++) {
-      if (this.splitColumns[i] + this.splitColumns[i + 1] == dt) {
-        let temp = this.splitColumns[i] + this.splitColumns[i + 1];
+    for (var i = 0; i < splitColumns.length - 1; i++) {
+      if (splitColumns[i] + splitColumns[i + 1] == maxRow) {
+        let temp = splitColumns[i] + splitColumns[i + 1];
         this.sizeColumns.push({ index: temp });
       }
 
-      if (this.splitColumns[i] + this.splitColumns[i + 1] > dt) {
-        let temp = this.splitColumns[i];
+      if (splitColumns[i] + splitColumns[i + 1] > maxRow) {
+        let temp = splitColumns[i];
         this.sizeColumns.push({ index: temp });
 
-        if (i + 1 == this.splitColumns.length - 1) {
-          let temp = this.splitColumns[i + 1];
+        if (i + 1 == splitColumns.length - 1) {
+          let temp = splitColumns[i + 1];
           this.sizeColumns.push({ index: temp });
         }
       }
 
-      if (this.splitColumns[i] + this.splitColumns[i + 1] < dt) {
-        let temp = this.splitColumns[i] + this.splitColumns[i + 1];
-        this.splitColumns[i + 1] = temp;
+      if (splitColumns[i] + splitColumns[i + 1] < maxRow) {
+        let temp = splitColumns[i] + splitColumns[i + 1];
+        splitColumns[i + 1] = temp;
       }
     }
   },
