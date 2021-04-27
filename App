@@ -1,0 +1,193 @@
+<template>
+  <div id="app">
+    <HelloWorld
+      v-for="(i, index) in sizeColumns"
+      :key="index"
+      :menus="menus"
+      :count="i.index"
+    />
+  </div>
+</template>
+
+<script>
+import HelloWorld from "./components/HelloWorld.vue";
+
+export default {
+  name: "App",
+  components: {
+    HelloWorld,
+  },
+  data() {
+    return {
+      listMenu: [
+        {
+          value: "Title 1",
+          category: [
+            {
+              value: "Category 1",
+              menu: [
+                {
+                  value: "Menu 1",
+                },
+                {
+                  value: "Menu 1",
+                },
+                {
+                  value: "Menu 1",
+                },
+                {
+                  value: "Menu 1",
+                },
+                {
+                  value: "Menu 1",
+                },
+                {
+                  value: "Menu 1",
+                },
+                {
+                  value: "Menu 1",
+                },
+                {
+                  value: "Menu 1",
+                },
+                {
+                  value: "Menu 1",
+                },
+                {
+                  value: "Menu 1",
+                },
+                {
+                  value: "Menu 1",
+                },
+                {
+                  value: "Menu 1",
+                },
+                {
+                  value: "Menu 1",
+                },
+                {
+                  value: "Menu 1",
+                },
+              ],
+            },
+            {
+              value: "Category 2",
+              menu: [
+                {
+                  value: "Menu 2",
+                },
+                {
+                  value: "Menu 2",
+                },
+              ],
+            },
+            {
+              value: "Category 3",
+              menu: [
+                {
+                  value: "Menu 3",
+                },
+                {
+                  value: "Menu 3",
+                },
+              ],
+            },
+
+            {
+              value: "Category 3",
+              menu: [
+                {
+                  value: "Menu 1",
+                },
+                {
+                  value: "Menu 1",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          value: "Title 2",
+          category: [
+            {
+              value: "Category 1",
+              menu: [
+                {
+                  value: "Menu 1",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      menus: [],
+      sizeColumns: [],
+      splitColumns: [],
+    };
+  },
+  created() {
+    //convert tree to list
+    var sizeOfTitle = [];
+    for (var l = 0; l < this.listMenu.length; l++) {
+      this.menus.push({ value: this.listMenu[l].value, type: "title" });
+      var index = 1;
+      for (var t = 0; t < this.listMenu[l].category.length; t++) {
+        this.menus.push({
+          value: this.listMenu[l].category[t].value,
+          type: "category",
+        });
+        index++;
+        for (var m = 0; m < this.listMenu[l].category[t].menu.length; m++) {
+          this.menus.push({
+            value: this.listMenu[l].category[t].menu[m].value,
+            type: "menu",
+          });
+          index++;
+        }
+        sizeOfTitle.push({ index });
+        index = 0;
+      }
+    }
+
+    var dt = 6;
+    //tách dữ liệu nếu length > đk
+    for (let i = 0; i < sizeOfTitle.length; i++) {
+      var value = sizeOfTitle[i].index;
+      if (value > dt) {
+        while (value > dt) {
+          this.splitColumns.push(dt);
+          value = value - dt;
+        }
+        if (value <= dt) {
+          this.splitColumns.push(value);
+        }
+      } else {
+        this.splitColumns.push(value);
+      }
+    }
+
+    //hợp nhất các cột nếu còn đủ chỗ trống
+    for (var i = 0; i < this.splitColumns.length - 1; i++) {
+      if (this.splitColumns[i] + this.splitColumns[i + 1] == dt) {
+        let temp = this.splitColumns[i] + this.splitColumns[i + 1];
+        this.sizeColumns.push({ index: temp });
+      }
+
+      if (this.splitColumns[i] + this.splitColumns[i + 1] > dt) {
+        let temp = this.splitColumns[i];
+        this.sizeColumns.push({ index: temp });
+
+        if (i + 1 == this.splitColumns.length - 1) {
+          let temp = this.splitColumns[i + 1];
+          this.sizeColumns.push({ index: temp });
+        }
+      }
+
+      if (this.splitColumns[i] + this.splitColumns[i + 1] < dt) {
+        let temp = this.splitColumns[i] + this.splitColumns[i + 1];
+        this.splitColumns[i + 1] = temp;
+      }
+    }
+  },
+};
+</script>
