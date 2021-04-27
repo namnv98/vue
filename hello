@@ -1,0 +1,52 @@
+<template>
+  <div class="hello">
+    <div v-for="i in count" :key="i">
+      <p class="title" v-if="menus[0].type == 'title'">{{ menus[0].value }}</p>
+      <p class="category" v-else-if="menus[0].type == 'category'">{{ menus[0].value }}</p>
+      <p class="menu" v-if="menus[0].type == 'menu'">{{ menus[0].value }}</p>
+      <p style="display: none">{{ menus.shift().value }}</p>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    count: Number,
+    menus: {
+      type: Array,
+      required: false,
+    },
+  },
+};
+</script>
+
+<style scoped>
+.hello {
+  font-family: monospace;
+  float: left;
+  margin-left: 20px;
+}
+
+.title {
+  font-weight: bold;
+  color: red;
+  border-color: green;
+  border-bottom-style: solid;
+  border-bottom-width: thin;
+}
+
+.category {
+  font-weight: bold;
+  color: seagreen;
+  border-color: green;
+  border-bottom-style: solid;
+  border-bottom-width: thin;
+}
+
+.menu {
+  border-color: green;
+  border-bottom-style: solid;
+  border-bottom-width: thin;
+}
+</style>
